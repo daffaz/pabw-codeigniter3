@@ -59,7 +59,18 @@
         table,
         th,
         td {
-            border: 1px solid black
+            margin: 10px auto;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+        }
+
+        td,
+        th {
+            padding: 5px 15px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #eee;
         }
     </style>
 </head>
@@ -67,10 +78,11 @@
 <body>
     <div class="container">
         <h1 style="text-align:center"><?= $title ?></h1>
+        <a href="<?= base_url('index.php/provinsi/export') ?>">Unduh spreadsheet</a>
         <table>
             <tr>
-                <th>Kode</th>
-                <th>Provinsi</th>
+                <th width="5%" style="text-align: left;">Kode</th>
+                <th style="text-align: left;">Provinsi</th>
             </tr>
             <?php foreach ($provinsi as $p) : ?>
                 <tr>
