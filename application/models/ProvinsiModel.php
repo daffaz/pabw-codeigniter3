@@ -15,4 +15,14 @@ class ProvinsiModel extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function tuliskedb($databanyak)
+    {
+        echo "<p>Sampe di model nih </p>";
+        print_r($databanyak);
+        foreach ($databanyak as $baris) {
+            print_r($baris);
+            print("<p>");
+            $this->db->insert('provinsi', $baris);
+        }
+    }
 }
