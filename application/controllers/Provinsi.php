@@ -14,6 +14,7 @@ class Provinsi extends CI_Controller
     {
         parent::__construct();
         $this->load->model('ProvinsiModel');
+        $this->load->helper('form');
     }
     public function index()
     {
@@ -71,5 +72,48 @@ class Provinsi extends CI_Controller
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
         exit;
+    }
+    public function upload()
+    {
+        $config['upload_path'] = './ngeupload/';
+        $config['allowed_types'] = 'xlsx';
+        $config['max_size'] = 1000;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('userupload')) {
+            // $error = ['error' => $this->upload->display_errors()];
+            // $this->load->view('provinsi_v', $error);
+            echo "gagal";
+        } else {
+            $data = ['upload_data' => $this->upload->data()];
+            $m = $this->upload->data();
+            $this->import($m['file_name']);
+            // print_r($m);
+            // echo "suckses";
+        }
+    }
+    public function import($file)
+    {
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $spreadsheet = $reader->load('ngeupload/' . $file);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray();
+        print("ini mengimport ");
+        //var_dump($sheetData);
+        print(count($sheetData));
+        //Bagian data mulai ke dua, berarti indeks 1
+        for ($i = 1; $i < count($sheetData); $i++) {
+            $id = $sheetData[$i][0]; #id
+            $nama_prov = $sheetData[$i][1]; #nama
+            echo "<br>" . $id . " " . $nama_prov;
+        }
+        //menulis ke database nih baru, sebenernya bisa disisipkan di bagian atas pas looping
+        for ($i = 1; $i < count($sheetData); $i++) {
+            //perhatikan indeks harus sama dengan field atau column di database
+            $data[$i]['id_provinsi'] = $sheetData[$i][0]; #id
+            $data[$i]['nama_provinsi'] = $sheetData[$i][1]; #nama
+        }
+        print_r($data);
+        $this->ProvinsiModel->tuliskedb($data);
     }
 }
