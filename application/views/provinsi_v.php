@@ -79,6 +79,11 @@
     <div class="container">
         <h1 style="text-align:center"><?= $title ?></h1>
         <a href="<?= base_url('index.php/provinsi/export') ?>">Unduh spreadsheet</a>
+        <hr>
+        <?php echo form_open_multipart('Provinsi/upload') ?>
+        <input type="file" name="userupload" size="20">
+        <input type="submit" value="Upload">
+        </form>
         <table>
             <tr>
                 <th width="5%" style="text-align: left;">Kode</th>
